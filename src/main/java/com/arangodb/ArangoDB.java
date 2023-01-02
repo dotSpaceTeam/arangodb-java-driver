@@ -668,7 +668,7 @@ public interface ArangoDB extends ArangoSerializationAccessor {
             return this;
         }
 
-        public Builder addCustomHeaderParam(final String key, final String value) {
+        public Builder customHeaderParam(final String key, final String value) {
             addHeaderParam(key, value);
             return this;
         }
