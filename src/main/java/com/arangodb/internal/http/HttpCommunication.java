@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -45,26 +46,31 @@ public class HttpCommunication implements Closeable {
     public static class Builder {
 
         private final HostHandler hostHandler;
+        private final Map<String, String> headerParam;
 
-        public Builder(final HostHandler hostHandler) {
+        public Builder(final HostHandler hostHandler, Map<String, String> headerParam) {
             super();
             this.hostHandler = hostHandler;
+            this.headerParam = headerParam;
         }
 
         public Builder(final Builder builder) {
-            this(builder.hostHandler);
+            this(builder.hostHandler, builder.headerParam);
         }
 
         public HttpCommunication build(final ArangoSerialization util) {
-            return new HttpCommunication(hostHandler);
+            return new HttpCommunication(hostHandler, headerParam);
         }
     }
 
     private final HostHandler hostHandler;
 
-    private HttpCommunication(final HostHandler hostHandler) {
+    private final Map<String, String> headerParam;
+
+    private HttpCommunication(final HostHandler hostHandler, Map<String, String> headerParam) {
         super();
         this.hostHandler = hostHandler;
+        this.headerParam = headerParam;
     }
 
     @Override
@@ -83,6 +89,9 @@ public class HttpCommunication implements Closeable {
             while (true) {
                 try {
                     final HttpConnection connection = (HttpConnection) host.connection();
+                    for (Map.Entry<String, String> entry : this.headerParam.entrySet()) {
+                        request.putHeaderParam(entry.getKey(), entry.getValue());
+                    }
                     final Response response = connection.execute(request);
                     hostHandler.success();
                     hostHandler.confirm();
