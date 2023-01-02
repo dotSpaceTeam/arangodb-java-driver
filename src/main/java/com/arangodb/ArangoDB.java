@@ -668,6 +668,11 @@ public interface ArangoDB extends ArangoSerializationAccessor {
             return this;
         }
 
+        public Builder addCustomHeaderParam(final String key, final String value) {
+            addHeaderParam(key, value);
+            return this;
+        }
+
         /**
          * Returns an instance of {@link ArangoDB}.
          *
@@ -713,7 +718,7 @@ public interface ArangoDB extends ArangoSerializationAccessor {
                     new VstCommunicationSync.Builder(hostHandler).timeout(timeout).user(user).password(password)
                             .jwt(jwt).useSsl(useSsl).sslContext(sslContext).chunksize(chunksize)
                             .maxConnections(maxConnections).connectionTtl(connectionTtl),
-                    new HttpCommunication.Builder(hostHandler),
+                    new HttpCommunication.Builder(hostHandler, headerParam),
                     util,
                     protocol,
                     hostResolver,

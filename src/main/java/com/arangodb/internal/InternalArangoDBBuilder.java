@@ -103,6 +103,7 @@ public abstract class InternalArangoDBBuilder {
     protected LoadBalancingStrategy loadBalancingStrategy;
     protected ArangoSerialization customSerializer;
     protected Integer responseQueueTimeSamples;
+    protected Map<String, String> headerParam;
 
 
     public InternalArangoDBBuilder() {
@@ -114,6 +115,7 @@ public abstract class InternalArangoDBBuilder {
         host = new HostDescription(ArangoDefaults.DEFAULT_HOST, ArangoDefaults.DEFAULT_PORT);
         hosts = new ArrayList<>();
         user = ArangoDefaults.DEFAULT_USER;
+        headerParam = new HashMap<>();
         loadProperties(ArangoDB.class.getResourceAsStream(DEFAULT_PROPERTY_FILE));
     }
 
@@ -167,6 +169,14 @@ public abstract class InternalArangoDBBuilder {
 
     protected void setUser(final String user) {
         this.user = user;
+    }
+
+    protected void setHeaderParam(Map<String, String> params) {
+        this.headerParam = params;
+    }
+
+    protected void addHeaderParam(final String key, final String value) {
+        this.headerParam.put(key, value);
     }
 
     protected void setPassword(final String password) {
